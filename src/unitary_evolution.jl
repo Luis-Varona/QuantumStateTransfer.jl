@@ -51,7 +51,7 @@ end
 function unitary_evolution(
     adj_mat::AbstractMatrix{<:Real}, time_steps::AbstractVector{<:Real}=TIME_STEPS,
 )
-    amps_vec = map(u -> transfer_amplitudes(adj_mat, u), 1:size(adj_mat, 1))
+    amps_vec = map(u -> track_qubit_amplitude(adj_mat, u), 1:size(adj_mat, 1))
     transfer_amplitudes = cat(amps_vec..., dims=1)
     transfer_fidelities = abs2.(transfer_amplitudes)
     return UnitaryEvolution(adj_mat, time_steps, transfer_amplitudes, transfer_fidelities)
