@@ -24,11 +24,11 @@ end
 
 
 """
-    optimize_state_transfer(
+    optimized_state_transfer(
         adj_mat::AbstractMatrix{<:Real}, source::Int, dest::Int;
         min_time::Real=0, max_time::Real=4π, initial_time::Real=ℯ, tol::Real=1e-5,
     )
-    optimize_state_transfer(
+    optimized_state_transfer(
         graph::AbstractGraph{Int}, source::Int, dest::Int;
         min_time::Real=0, max_time::Real=4π, initial_time::Real=ℯ, tol::Real=1e-5,
     )
@@ -56,25 +56,25 @@ occurs between the source and target.
 
 # Examples
 ```jldoctest
-julia> using Graphs
+julia> using Graphs: Graph
 
-julia> C4_adj_mat = BitMatrix([0 1 0 1; # Cycle graph on 4 vertices (adj. matrix format)
-                               1 0 1 0;
-                               0 1 0 1;
-                               1 0 1 0]);
+julia> C4_adj = BitMatrix([0 1 0 1; # Cycle graph on 4 vertices (adj. matrix format)
+                           1 0 1 0;
+                           0 1 0 1;
+                           1 0 1 0]);
 
-julia> C4_graph = Graph(C4_adj_mat); # Cycle graph on 4 vertices (graph format)
+julia> C4_graph = Graph(C4_adj); # Cycle graph on 4 vertices (graph format)
 
-julia> optimize_state_transfer(C4_adj_mat, 1, 2) # There is no PST from node 1 to node 2
+julia> optimized_state_transfer(C4_adj, 1, 2) # There is no PST from node 1 to node 2
 OptimizedStateTransfer(Bool[0 1 0 1; 1 0 1 0; 0 1 0 1; 1 0 1 0], 1, 2, 0.25, 2.3561944921913542, false)
 
-julia> optimize_state_transfer(C4_graph, 1, 3) # There is PST from node 1 to node 3 over time π/2
+julia> optimized_state_transfer(C4_graph, 1, 3) # There is PST from node 1 to node 3 over time π/2
 OptimizedStateTransfer(Bool[0 1 0 1; 1 0 1 0; 0 1 0 1; 1 0 1 0], 1, 3, 1.0, 1.5707963268950111, true)
 
 
 ```
 """
-function optimize_state_transfer(
+function optimized_state_transfer(
     adj_mat::AbstractMatrix{<:Real}, source::Int, dest::Int;
     min_time::Real=0, max_time::Real=4π, initial_time::Real=ℯ, tol::Real=1e-5,
 )
@@ -102,13 +102,13 @@ function optimize_state_transfer(
     )
 end
 
-function optimize_state_transfer(
+function optimized_state_transfer(
     graph::AbstractGraph{Int}, source::Int, dest::Int;
     min_time::Real=0, max_time::Real=4π, initial_time::Real=ℯ, tol::Real=1e-5,
 )
     adj_mat = adjacency_matrix(graph)
     adj_mat = isa(graph, AbstractSimpleGraph) ? BitMatrix(adj_mat) : Matrix(adj_mat)
-    return optimize_state_transfer(
+    return optimized_state_transfer(
         adj_mat, source, dest,
         min_time=min_time, max_time=max_time, initial_time=initial_time, tol=tol
     )
