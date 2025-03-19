@@ -24,6 +24,8 @@ docs/site/
 Manifest.toml
 
 # Local metadata/configuration files
+**/.DS_Store
+.dist/
+.build/
 .vscode/
-.DS_Store
-.dist
+.idea/
