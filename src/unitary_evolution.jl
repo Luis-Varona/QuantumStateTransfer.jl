@@ -15,8 +15,8 @@ A struct to store data on the unitary evolution of a quantum network.
 - `adjacency_matrix::AbstractMatrix{<:Real}`: The network in adjacency_matrix format.
 - `time_steps::AbstractVector{<:Real}`: The times at which to track state amplitudes.
 - `transfer_amplitudes::Array{ComplexF64, 3}`: The amplitudes of state transfer between
-qubits. The first dimension corresponds to the source qubit, the second corresponds to the
-target qubit, and the third corresponds to the time step.
+qubits. The first dimension corresponds to the time step, the second corresponds to the
+target qubit, and the third corresponds to the source qubit.
 - `transfer_fidelities::Array{Float64, 3}`: The magnitudes of the transfer amplitudes
 squared, representing wave function probabilities rather than amplitudes.
 """
@@ -52,7 +52,7 @@ function unitary_evolution(
     adj_mat::AbstractMatrix{<:Real}, time_steps::AbstractVector{<:Real}=TIME_STEPS,
 )
     amps_vec = map(u -> track_qubit_amplitude(adj_mat, u), 1:size(adj_mat, 1))
-    transfer_amplitudes = cat(amps_vec..., dims=1)
+    transfer_amplitudes = stack(amps_vec)
     transfer_fidelities = abs2.(transfer_amplitudes)
     return UnitaryEvolution(adj_mat, time_steps, transfer_amplitudes, transfer_fidelities)
 end
@@ -107,8 +107,8 @@ function track_qubit_amplitude(
     source_state = @view identity_mat[:, source]
     dest_states = @view identity_mat[:, dests]
     
-    amps = map(time -> dest_states' * exp(im * time * adj_mat)' * source_state, time_steps)
-    return hcat(amps...)
+    amps = map(time -> source_state' * exp(im * time * adj_mat) * dest_states, time_steps)
+    return vcat(amps...)
 end
 
 function track_qubit_amplitude(

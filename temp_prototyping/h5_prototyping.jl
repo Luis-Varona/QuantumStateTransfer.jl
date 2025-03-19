@@ -18,11 +18,12 @@ h5_adj_mat = read_matrix(hypercube_5_source, n, n)
 h5_graph = Graph(h5_adj_mat)
 h5_pst_pairs = pst_pairs(h5_graph)
 h5_pair_gen = h5_pst_pairs.pst_pairs;
-h5_pair_vec = collect(h5_pair_gen)
+# h5_pair_vec = collect(h5_pair_gen)
 
-for pst_pair in h5_pair_vec
-    println(pst_pair)
-end
+# for pst_pair in h5_pair_vec
+#     println(pst_pair)
+# end
 
 h5_unitary_evol = unitary_evolution(h5_graph)
-println(h5_unitary_evol)
+h5_test_b = track_qubit_amplitude(h5_adj_mat, 7)
+# println(h5_unitary_evol)
