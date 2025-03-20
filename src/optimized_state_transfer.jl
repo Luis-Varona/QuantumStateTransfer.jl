@@ -56,7 +56,7 @@ occurs between the source and target.
 
 # Examples
 ```jldoctest
-julia> using Graphs
+julia> using Graphs: Graph
 
 julia> C4_adj = BitMatrix([0 1 0 1; # Cycle graph on 4 vertices (adj. matrix format)
                            1 0 1 0;

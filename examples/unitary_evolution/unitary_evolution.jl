@@ -2,24 +2,22 @@ using QuantumStateTransfer: UnitaryEvolution, unitary_evolution
 using Graphs: cycle_graph
 
 using FileIO
-using ImageIO, ImageMagick, ImageShow, Images, OpenCV
+using ImageIO, ImageMagick, ImageShow, Images
 using Plots, Plots.PlotMeasures
 
 
 """
     plot_c4_amplitudes(c4_evolution::UnitaryEvolution, source::Int)
 
-[To do]
+Plot the transfer amplitudes from a source qubit on the 4-vertex cycle graph C₄.
 
 # Arguments
-- `c4_evolution::UnitaryEvolution`: [To do]
-- `source::Int`: [To do]
+- `c4_evolution::UnitaryEvolution`: Data on the unitary evolution of C₄.
+- `source::Int`: The index of the source qubit.
 
 # Returns
-- `Matrix{RGB{N0f8}}`: [To do]
-
-# Examples
-[To do]
+- `Matrix{RGB{N0f8}}`: The plot of the transfer amplitudes in RGB matrix format.
+(This is easily convertible to other image formats.)
 """
 function plot_c4_amps(c4_evolution::UnitaryEvolution, source::Int)
     time_steps = c4_evolution.time_steps
@@ -55,6 +53,20 @@ function plot_c4_amps(c4_evolution::UnitaryEvolution, source::Int)
     return load(io)[26:1825, 61:1860]
 end
 
+
+"""
+    plot_c4_fidelities(c4_evolution::UnitaryEvolution, source::Int)
+
+Plot the transfer fidelities from a source qubit on the 4-vertex cycle graph C₄.
+
+# Arguments
+- `c4_evolution::UnitaryEvolution`: Data on the unitary evolution of C₄.
+- `source::Int`: The index of the source qubit.
+
+# Returns
+- `Matrix{RGB{N0f8}}`: The plot of the transfer fidelities in RGB matrix format.
+(This is easily convertible to other image formats.)
+"""
 function plot_c4_fids(c4_evolution::UnitaryEvolution, source::Int)
     time_steps = c4_evolution.time_steps
     transfer_fidelities = c4_evolution.transfer_fidelities[:, :, source]
@@ -87,6 +99,7 @@ function plot_c4_fids(c4_evolution::UnitaryEvolution, source::Int)
 end
 
 
+# Beginning of the example script
 c4 = cycle_graph(4)
 c4_evolution = unitary_evolution(c4)
 c4_transfer_amps_plots = map(u -> plot_c4_amps(c4_evolution, u), 1:4)
