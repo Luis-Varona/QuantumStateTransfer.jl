@@ -51,7 +51,8 @@ not provided.)
 between two qubits.
 
 # Returns
-- `PSTPairs`: A struct containing the quantum network, a boolean indicating whether any pairs
+- `PSTPairs`: A struct containing the adjacency matrix of the quantum network, a boolean
+indicating whether any qubit pairs exhibit PST, and a generator of all PST pairs.
 """
 function pst_pairs(adj_mat::AbstractMatrix{<:Real}, tol::Real=1e-5)
     function ost_result_to_pst_pair(result::OptimizedStateTransfer)
