@@ -22,6 +22,16 @@ struct OptimizedStateTransfer
     is_pst::Bool
 end
 
+function Base.show(io::IO, ost::OptimizedStateTransfer)
+    buffer = IOBuffer()
+    show(IOContext(buffer), "text/plain", ost.adjacency_matrix)
+    s1 = split(String(take!(buffer)), ':')[1]
+    s2 = round(ost.maximum_fidelity, digits=5)
+    s3 = round(ost.optimal_time, digits=5)
+    out = "OptimizedStateTransfer($s1, $(ost.source), $(ost.dest), $s2, $s3, $(ost.is_pst))"
+    print(io, out)
+end
+
 
 """
     optimized_state_transfer(
@@ -66,10 +76,10 @@ julia> C4_adj = BitMatrix([0 1 0 1; # Cycle graph on 4 vertices (adj. matrix for
 julia> C4_graph = Graph(C4_adj); # Cycle graph on 4 vertices (graph format)
 
 julia> optimized_state_transfer(C4_adj, 1, 2) # There is no PST from node 1 to node 2
-OptimizedStateTransfer(Bool[0 1 0 1; 1 0 1 0; 0 1 0 1; 1 0 1 0], 1, 2, 0.25, 2.3561944921913542, false)
+OptimizedStateTransfer(4×4 BitMatrix, 1, 2, 0.25, 2.35619, false)
 
 julia> optimized_state_transfer(C4_graph, 1, 3) # There is PST from node 1 to node 3 over time π/2
-OptimizedStateTransfer(Bool[0 1 0 1; 1 0 1 0; 0 1 0 1; 1 0 1 0], 1, 3, 1.0, 1.5707963268950111, true)
+OptimizedStateTransfer(4×4 BitMatrix, 1, 3, 1.0, 1.5708, true)
 
 
 ```
