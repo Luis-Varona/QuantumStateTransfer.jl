@@ -5,27 +5,23 @@ version = "0.1.0-DEV"
 
 [deps]
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Optim = "429524aa-4258-5aef-a3af-852621145aeb"
+
+[compat]
+Graphs = "1.9 - 1"
+LinearAlgebra = "1.9 - 1"
+Optim = "1.9 - 1"
+julia = "1.9 - 1"
+
+[extras]
 ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
 ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
 ImageShow = "4e3cecfd-b093-5904-9786-8bbb286a6a31"
 Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
-LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
-Optim = "429524aa-4258-5aef-a3af-852621145aeb"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-
-[compat]
-Graphs = "1.9 - 1"
-ImageIO = "0.6 - 0"
-ImageMagick = "1.2 - 1"
-ImageShow = "0.3 - 0"
-Images = "0.26 - 0"
-LinearAlgebra = "1.9 - 1"
-Optim = "1.9 - 1"
-Plots = "1.30 - 1"
-julia = "1.9 - 1"
-
-[extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
+examples = ["ImageIO", "ImageMagick", "ImageShow", "Images", "Plots"]
 test = ["Test"]
