@@ -69,7 +69,7 @@ function pst_pairs(adj_mat::AbstractMatrix{<:Real}, tol::Real=1e-5)
 end
 
 function pst_pairs(graph::AbstractGraph{Int}, tol::Real=1e-5)
-    adj_mat = adjacency_matrix(graph)
-    adj_mat = isa(graph, AbstractSimpleGraph) ? BitMatrix(adj_mat) : Matrix(adj_mat)
+    MatType = hasproperty(graph, :weights) ? Matrix : BitMatrix
+    adj_mat = MatType(adjacency_matrix(graph))
     return pst_pairs(adj_mat, tol)
 end

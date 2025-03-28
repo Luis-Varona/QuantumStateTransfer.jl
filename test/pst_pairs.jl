@@ -19,8 +19,8 @@ function hypercube_pst_pairs(n::Int)
     hc = hypercube_graph(n)
     hc_adj = adjacency_matrix(hc)
     first_rows = map(k -> (hc_adj^k)[1, :], 1:n)
-    nodes_exclude = vcat(map(v -> getproperty(v, :nzind), first_rows[1:(n - 1)])...)
-    nodes = filter(u -> u != 1, setdiff(first_rows[n].nzind, nodes_exclude))
+    nodes_exclude = vcat(map(v -> v.nzind, first_rows[1:(n - 1)])...)
+    nodes = filter(!isequal(1), setdiff(first_rows[n].nzind, nodes_exclude))
     return map(i -> (1, i), nodes)
 end
 

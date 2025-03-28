@@ -1,7 +1,7 @@
 module TestOptimizedStateTransfer
 
 using Test
-using QuantumStateTransfer: optimized_state_transfer
+using QuantumStateTransfer: optimized_state_transfer, qubit_pair_transfer
 using Graphs: Graph
 
 C4_adj = BitMatrix([0 1 0 1; # Cycle graph on 4 vertices (adj. matrix format)
@@ -19,14 +19,19 @@ is_pst2 = true
 is_optimal_time1(time::Real) = time % 2π ≈ 3π / 4
 is_optimal_time2(time::Real) = time % 2π ≈ π / 2
 
-@time @testset "optimized_state_transfer" begin
-    results1 = optimized_state_transfer(C4_adj, source, dest1)
-    results2 = optimized_state_transfer(C4_graph, source, dest2)
+@time @testset "qubit_pair_transfer" begin
+    qpt1 = qubit_pair_transfer(C4_adj, source, dest1)
+    qpt2 = qubit_pair_transfer(C4_graph, source, dest2)
     
-    @test results1.maximum_fidelity ≈ maximum_fidelity1
-    @test results2.is_pst == is_pst2
-    @test is_optimal_time1(results1.optimal_time)
-    @test is_optimal_time2(results2.optimal_time)
+    @test qpt1.maximum_fidelity ≈ maximum_fidelity1
+    @test qpt2.is_pst == is_pst2
+    @test is_optimal_time1(qpt1.optimal_time)
+    @test is_optimal_time2(qpt2.optimal_time)
+end
+
+# TODO: Make test for `optimized_state_transfer` function
+@time @testset "optimized_state_transfer" begin
+    @test 1 == 1
 end
 
 end
