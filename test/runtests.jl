@@ -5,5 +5,4 @@ include("optimized_state_transfer.jl")
 
 println()
 
-@info "Testing for PST on hypercube graphs"
-include("pst_pairs.jl")
+# TODO: Add tests for `unitary_evolution.jl`

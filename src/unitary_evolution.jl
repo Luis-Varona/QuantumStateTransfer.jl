@@ -1,9 +1,5 @@
-"""
-    TIME_STEPS::StepRangeLen{Float64}
-
-The default times at which to track state amplitudes in a quantum network.
-"""
 const TIME_STEPS::StepRangeLen{Float64} = 0:(π / 200):5
+const TIME_STEPS_STR::String = "0:(π / 200):5"
 
 
 """
@@ -30,11 +26,11 @@ end
 
 """
     unitary_evolution(
-        adj_mat::AbstractMatrix{<:Real}, time_steps::AbstractVector{<:Real}=1:(π / 200):5,
+        adj_mat::AbstractMatrix{<:Real}, time_steps::AbstractVector{<:Real}=$TIME_STEPS_STR,
     )
     unitary_evolution(
-        graph::AbstractGraph{Int}, time_steps::AbstractVector{<:Real}=1:(π / 200):5,
-    )::UnitaryEvolution
+        graph::AbstractGraph{Int}, time_steps::AbstractVector{<:Real}=$TIME_STEPS_STR,
+    )
 
 Simulates unitary evolution on a quantum network in the idealized absence of noise.
 
@@ -44,7 +40,7 @@ Simulates unitary evolution on a quantum network in the idealized absence of noi
 not provided.)
 
 # Keywords
-- `time_steps::AbstractVector{<:Real}=1:(π / 200):5`: The times at which to track state
+- `time_steps::AbstractVector{<:Real}=$TIME_STEPS_STR`: The times at which to track state
 transfer between qubits.
 
 # Returns
@@ -128,8 +124,6 @@ julia> evolution.transfer_fidelities # State transfer fidelities between qubits
  0.0159678  0.983967   6.47816e-5
  0.141444   0.85269    0.00586567
  0.464554   0.400851   0.134595
-
-
 ```
 """
 function unitary_evolution(
@@ -144,11 +138,11 @@ function unitary_evolution(
     return UnitaryEvolution(adj_mat, time_steps, transfer_amplitudes, transfer_fidelities)
 end
 
-function unitary_evolution(
-    graph::AbstractGraph{Int}, time_steps::AbstractVector{<:Real}=TIME_STEPS
+@inline function unitary_evolution(
+    graph::AbstractGraph{Int}, time_steps::AbstractVector{<:Real}=TIME_STEPS,
 )
-    adj_mat = adjacency_matrix(graph)
-    adj_mat = isa(graph, AbstractSimpleGraph) ? BitMatrix(adj_mat) : Matrix(adj_mat)
+    MatType = hasproperty(graph, :weights) ? Matrix : BitMatrix
+    adj_mat = MatType(adjacency_matrix(graph))
     return unitary_evolution(adj_mat, time_steps)
 end
 
@@ -157,13 +151,9 @@ end
     track_qubit_amplitude(
         adj_mat::AbstractMatrix{<:Real}, source::Int;
         dests::AbstractVector{Int}=1:size(adj_mat, 1),
-        time_steps::AbstractVector{<:Real}=0:(π / 200):5,
+        time_steps::AbstractVector{<:Real}=$TIME_STEPS_STR,
     )
-    track_qubit_amplitude(
-        graph::AbstractGraph{Int}, source::Int;
-        dests::AbstractVector{Int}=1:nv(graph),
-        time_steps::AbstractVector{<:Real}=0:(π / 200):5,
-    )
+    track_qubit_amplitude(graph::AbstractGraph{Int}, source::Int; kwargs...)
 
 Tracks the wave function amplitude of a qubit in a quantum network over time.
 
@@ -176,7 +166,7 @@ not provided.)
 # Keywords
 - `dests::AbstractVector{Int}=1:size(adj_mat, 1)`: The qubits at which to track the wave
 function amplitude of `source`.
-- `time_steps::AbstractVector{<:Real}=0:(π / 200):5`: The times at which to track the wave
+- `time_steps::AbstractVector{<:Real}=$TIME_STEPS_STR`: The times at which to track the wave
 function amplitude of `source`.
 
 # Returns
@@ -198,8 +188,6 @@ julia> amps_3_to_247 = track_qubit_amplitude(g, source, dests=dests, time_steps=
   -0.248756-0.288904im    -0.248756-0.288904im     0.291226-0.129163im
   -0.158849+0.0938213im   -0.158849+0.0938213im   -0.210858+0.121758im
    0.500422+0.160662im     0.500422+0.160662im    -0.259143-0.0882654im
-
-
 ```
 """
 function track_qubit_amplitude(
@@ -207,9 +195,7 @@ function track_qubit_amplitude(
     dests::AbstractVector{Int}=1:size(adj_mat, 1),
     time_steps::AbstractVector{<:Real}=TIME_STEPS,
 )
-    if adj_mat != adj_mat'
-        throw(ArgumentError("`adj_mat` must be symmetric"))
-    end
+    (adj_mat == adj_mat') || throw(ArgumentError("`adj_mat` must be symmetric"))
     
     identity_mat = I(size(adj_mat, 1))
     source_state = @view identity_mat[:, source]
@@ -219,12 +205,8 @@ function track_qubit_amplitude(
     return vcat(amps...)
 end
 
-function track_qubit_amplitude(
-    graph::AbstractGraph{Int}, source::Int;
-    dests::AbstractVector{Int}=1:nv(graph),
-    time_steps::AbstractVector{<:Real}=TIME_STEPS,
-)
-    adj_mat = adjacency_matrix(graph)
-    adj_mat = isa(graph, AbstractSimpleGraph) ? BitMatrix(adj_mat) : Matrix(adj_mat)
-    return track_qubit_amplitude(adj_mat, source; dests=dests, time_steps=time_steps)
+@inline function track_qubit_amplitude(graph::AbstractGraph{Int}, source::Int; kwargs...)
+    MatType = hasproperty(graph, :weights) ? Matrix : BitMatrix
+    adj_mat = MatType(adjacency_matrix(graph))
+    return track_qubit_amplitude(adj_mat, source; kwargs...)
 end

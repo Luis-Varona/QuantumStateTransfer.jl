@@ -15,6 +15,7 @@ open(dest, "w+") do f
     write(f, "Path Graph Data\n\n")
 end
 
+# TODO: Refactor this so that it works with the new `OptimizedStateTransfer` API
 for n in 2:25
     g = path_graph(n)
     g_adj = BitMatrix(adjacency_matrix(g))
