@@ -3,13 +3,13 @@ module ShubertPiyavskii
 using DataStructures: BinaryMaxHeap
 
 include("ErrorMessages.jl")
-using .ErrorMessages: INTERVAL_ERR, LIPSCHITZ_ERR, TOL_ERR
+using .ErrorMessages.ShubertPiyavskii
 
 export GlobalMaximizationResult, maximize_shubert
 
 
 const RealT = Float64
-const DEFAULT_TOL = 1e-5
+const DEFAULT_TOL = 1e-5 # TODO: Perhaps it's worth making this larger (1e-2 or 1e-3)?
 
 
 struct GlobalMaximizationResult
@@ -37,12 +37,12 @@ end
 Base.isless(A::_SearchInterval, B::_SearchInterval) = A.upper_bound < B.upper_bound
 
 
-# TODO: Add parallelization over subintervals of the initial optimization range?
+# TODO: Add parallelization over subintervals of the initial optimization range
 function maximize_shubert(
     objective::Function, x_lower::RealT, x_upper::RealT, lipschitz::RealT;
     tol::RealT=DEFAULT_TOL,
 )
-    x_lower < x_upper || throw(DomainError([x_lower, x_upper], INTERVAL_ERR))
+    x_lower < x_upper || throw(DomainError([x_lower, x_upper], OPTIM_RANGE_ERR))
     lipschitz > 0 || throw(DomainError(lipschitz, LIPSCHITZ_ERR))
     tol > 0 || throw(DomainError(tol, TOL_ERR))
     
@@ -79,6 +79,7 @@ function maximize_shubert(
 end
 
 
+@inline # TODO: Should benchmark to see if this actually helps
 function _split_search_interval(
     search_interval::_SearchInterval, objective::Function, lipschitz::RealT,
 )

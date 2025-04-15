@@ -5,7 +5,7 @@ using LinearAlgebra: I, norm
 
 include("ErrorMessages.jl")
 include("ShubertPiyavskii.jl")
-using .ErrorMessages
+using .ErrorMessages.QuantumStateTransfer
 using .ShubertPiyavskii: maximize_shubert
 
 include("unitary_evolution.jl")
