@@ -195,7 +195,7 @@ function track_qubit_amplitude(
     dests::AbstractVector{Int}=1:size(adj_mat, 1),
     time_steps::AbstractVector{<:Real}=TIME_STEPS,
 )
-    (adj_mat == adj_mat') || throw(ArgumentError("`adj_mat` must be symmetric"))
+    (adj_mat == adj_mat') || throw(DomainError(adj_mat, ADJ_MAT_ERR))
     
     identity_mat = I(size(adj_mat, 1))
     source_state = @view identity_mat[:, source]

@@ -28,14 +28,16 @@ function hypercube_graph(n::Int)
 end
 
 
-N = 5
+N = 4
 
-for n in 1:5
+for n in 1:N
     hc = hypercube_graph(n)
     @info "Data on state transfer on the $n-hypercube:"
     
     @time begin
-        for (i, qpt) in enumerate(collect(optimized_state_transfer(hc).qubit_pairs))
+        for (i, qpt) in enumerate(
+            collect(optimized_state_transfer(hc, tol=1e-2).qubit_pairs),
+        )
             println("($i) $qpt")
         end
     end
@@ -44,8 +46,8 @@ for n in 1:5
 end
 
 
-n = 37
-p = 0.35
+n = 14
+p = 0.91
 g = erdos_renyi(n, p)
 @info "Data on state transfer on a G(n=$n, p=$p) Erdős–Rényi random graph:"
 

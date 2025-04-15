@@ -1,7 +1,6 @@
 const MIN_TIME = 0
 const MAX_TIME = 4π
-const INITIAL_TIME = ℯ
-const TOL = 1e-5
+const DEFAULT_TOL = 1e-5
 
 
 """
@@ -107,8 +106,7 @@ end
         adj_mat::AbstractMatrix{<:Real}, source::Int, dest::Int;
         min_time::Real=$MIN_TIME,
         max_time::Real=$MAX_TIME,
-        initial_time::Real=$INITIAL_TIME,
-        tol::Real=$TOL,
+        tol::Real=$DEFAULT_TOL,
     )
     qubit_pair_transfer(graph::AbstractGraph{Int}, source::Int, dest::Int; kwargs...)
 
@@ -126,9 +124,7 @@ not provided.)
 # Keywords
 - `min_time`::Real=$MIN_TIME: The minimum time at which state transfer is considered.
 - `max_time::Real=$MAX_TIME`: The maximum time at which state transfer is considered.
-- `initial_time::Real=$INITIAL_TIME`: The initial estimate passed to the optimization
-algorithm.
-- `tol::Real=$TOL`: The margin of error for determining whether perfect state transfer
+- `tol::Real=$DEFAULT_TOL`: The margin of error for determining whether perfect state transfer
 occurs between the source and target.
 
 # Returns
@@ -156,24 +152,22 @@ function qubit_pair_transfer(
     adj_mat::AbstractMatrix{<:Real}, source::Int, dest::Int;
     min_time::Real=MIN_TIME,
     max_time::Real=MAX_TIME,
-    initial_time::Real=INITIAL_TIME,
-    tol::Real=TOL,
+    tol::Real=DEFAULT_TOL,
 )
-    (adj_mat == adj_mat') || throw(ArgumentError("`adj_mat` must be symmetric"))
+    (adj_mat == adj_mat') || throw(DomainError(adj_mat, ADJ_MAT_ERR))
     
     n = size(adj_mat, 1)
     source_state = falses(n); source_state[source] = true
     dest_state = falses(n); dest_state[dest] = true
     fidelity(time::Float64) = abs2(source_state' * exp(im * time * adj_mat) * dest_state)
     
-    lower = [Float64(min_time)]
-    upper = [Float64(max_time)]
-    initial_x = [Float64(initial_time)]
-    solver = IPNewton()
+    lower = Float64(min_time)
+    upper = Float64(max_time)
+    lipschitz = 2 * norm(adj_mat, 2)
     
-    res = optimize(x -> 1 - fidelity(x[1]), lower, upper, initial_x, solver)
-    maximum_fidelity = 1 - res.minimum
-    optimal_time = res.minimizer[1]
+    res = maximize_shubert(fidelity, lower, upper, lipschitz; tol=tol)
+    maximum_fidelity = res.maximum
+    optimal_time = res.maximizer
     is_pst = maximum_fidelity > 1 - tol
     
     return QubitPairTransfer(source, dest, is_pst, maximum_fidelity, optimal_time)
