@@ -1,8 +1,12 @@
 module QuantumStateTransfer
 
 using Graphs: AbstractGraph, adjacency_matrix, nv
-using LinearAlgebra: I
-using Optim: IPNewton, optimize
+using LinearAlgebra: I, norm
+
+include("ErrorMessages.jl")
+include("ShubertPiyavskii.jl")
+using .ErrorMessages
+using .ShubertPiyavskii: maximize_shubert
 
 include("unitary_evolution.jl")
 include("optimized_state_transfer.jl")
