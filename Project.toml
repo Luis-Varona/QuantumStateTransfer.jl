@@ -1,21 +1,26 @@
 name = "QuantumStateTransfer"
 uuid = "34a31443-0e20-4b48-9031-55d81b0a9864"
-authors = ["Luis M. B. Varona <lbvarona@mta.ca>", "Nathaniel Johnston <njohnston@mta.ca>"]
-description = "A Julia package for modelling state transfer on quantum spin networks."
-maintainers = ["Luis M. B. Varona <lbvarona@mta.ca>"]
-repository = "https://github.com/Luis-Varona/QuantumStateTransfer.jl"
 version = "0.1.0-DEV"
+authors = ["Luis M. B. Varona <lbvarona@mta.ca>", "Nathaniel Johnston <njohnston@mta.ca>"]
+maintainers = ["Luis M. B. Varona <lbvarona@mta.ca>"]
+description = "A Julia package for modelling state transfer on quantum spin networks."
+readme = "README.md"
+repository = "https://github.com/Luis-Varona/QuantumStateTransfer.jl"
+license = "MIT"
+keywords = ["quantum computing", "graph theory", "physics", "optimization"]
 
 [deps]
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
 
 [compat]
-DataStructures = "0.17 - 0"
-Graphs = "1.9 - 1"
-LinearAlgebra = "1.9 - 1"
-julia = "1.9 - 1"
+DataStructures = ">=0.18.15, <1.0"
+Graphs = "1.10"
+LinearAlgebra = "1.9"
+PrecompileTools = "1.2"
+julia = "1.9"
 
 [extras]
 ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
