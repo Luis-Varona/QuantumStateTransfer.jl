@@ -9,7 +9,8 @@ export GlobalMaximizationResult, maximize_shubert
 
 
 const RealT = Float64
-const DEFAULT_TOL = 1e-5 # TODO: Perhaps it's worth making this larger (1e-2 or 1e-3)?
+# TODO: Another "standard" option is 1e-5... but SP runs too slow then. Decide?
+const DEFAULT_TOL = 0.01
 
 
 struct GlobalMaximizationResult
