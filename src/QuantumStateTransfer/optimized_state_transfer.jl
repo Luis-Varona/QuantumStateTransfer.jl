@@ -1,6 +1,7 @@
 const MIN_TIME = 0
 const MAX_TIME = 4π
-const DEFAULT_TOL = 1e-5
+# TODO: Another "standard" option is 1e-5... but SP runs too slow then. Decide?
+const DEFAULT_TOL = 0.01
 
 
 """

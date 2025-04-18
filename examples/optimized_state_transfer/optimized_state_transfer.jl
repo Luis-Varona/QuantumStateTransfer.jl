@@ -36,7 +36,7 @@ for n in 1:N
     
     @time begin
         for (i, qpt) in enumerate(
-            collect(optimized_state_transfer(hc, tol=1e-2).qubit_pairs),
+            collect(optimized_state_transfer(hc).qubit_pairs),
         )
             println("($i) $qpt")
         end
@@ -46,8 +46,8 @@ for n in 1:N
 end
 
 
-n = 14
-p = 0.91
+n = 19
+p = 0.63
 g = erdos_renyi(n, p)
 @info "Data on state transfer on a G(n=$n, p=$p) Erdős–Rényi random graph:"
 

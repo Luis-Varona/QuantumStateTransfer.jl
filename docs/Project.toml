@@ -4,6 +4,6 @@ Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 QuantumStateTransfer = "34a31443-0e20-4b48-9031-55d81b0a9864"
 
 [compat]
-Documenter = "1.0 - 1"
-Graphs = "1.9 - 1"
-julia = "1.9 - 1"
+Documenter = "1.5"
+Graphs = "1.10"
+julia = "1.9"

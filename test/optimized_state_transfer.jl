@@ -102,7 +102,7 @@ function hypercube_pst_pairs(n::Int)
 end
 
 
-N = 5
+N = 4
 hypercubes = map(hypercube_graph, 1:N)
 pst_pairs_theory = map(hypercube_pst_pairs, 1:N)
 
