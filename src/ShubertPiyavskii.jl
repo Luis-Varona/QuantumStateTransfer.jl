@@ -44,7 +44,7 @@ function maximize_shubert(
     tol::RealT=DEFAULT_TOL,
 )
     x_lower < x_upper || throw(DomainError([x_lower, x_upper], OPTIM_RANGE_ERR))
-    lipschitz > 0 || throw(DomainError(lipschitz, LIPSCHITZ_ERR))
+    lipschitz >= 0 || throw(DomainError(lipschitz, LIPSCHITZ_ERR))
     tol > 0 || throw(DomainError(tol, TOL_ERR))
     
     y_lower = objective(x_lower)
